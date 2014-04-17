@@ -37,17 +37,17 @@ public class TodoController {
         }
     };
 
-    private final Function<CreateTodoCommand, Todo> createCommandToTodoMapper = new Function<CreateTodoCommand, Todo>() {
+    private final Function<CreateTodoRequest, Todo> createRequestToTodoMapper = new Function<CreateTodoRequest, Todo>() {
         @Override
-        public Todo apply(CreateTodoCommand createTodoCommand) {
-            return new Todo(null, createTodoCommand.title, createTodoCommand.body, null);
+        public Todo apply(CreateTodoRequest createTodoRequest) {
+            return new Todo(null, createTodoRequest.title, createTodoRequest.body, null);
         }
     };
 
-    private final Function<UpdateTodoCommand, Todo> updateCommandToTodoMapper = new Function<UpdateTodoCommand, Todo>() {
+    private final Function<UpdateTodoRequest, Todo> updateRequestToTodoMapper = new Function<UpdateTodoRequest, Todo>() {
         @Override
-        public Todo apply(UpdateTodoCommand updateTodoCommand) {
-            return new Todo(updateTodoCommand.id, updateTodoCommand.title, updateTodoCommand.body, null);
+        public Todo apply(UpdateTodoRequest updateTodoRequest) {
+            return new Todo(updateTodoRequest.id, updateTodoRequest.title, updateTodoRequest.body, null);
         }
     };
 
@@ -70,17 +70,17 @@ public class TodoController {
     }
 
     @RequestMapping(method = POST, consumes = JSON, produces = JSON)
-    public TodoDTO createTodo(@RequestBody @Valid CreateTodoCommand createTodoCommand) {
-        final Todo todoToCreate = createCommandToTodoMapper.apply(createTodoCommand);
+    public TodoDTO createTodo(@RequestBody @Valid CreateTodoRequest createTodoRequest) {
+        final Todo todoToCreate = createRequestToTodoMapper.apply(createTodoRequest);
         final Todo createdTodo = todoService.createTodo(todoToCreate);
         return todoToDTOMapper.apply(createdTodo);
     }
 
     @RequestMapping(value = "/{todoId}", method = PUT, consumes = JSON, produces = JSON)
-    public TodoDTO updateTodo(@PathVariable Long todoId, @RequestBody @Valid UpdateTodoCommand updateTodoCommand) {
-        checkArgument(todoId.equals(updateTodoCommand.id));
+    public TodoDTO updateTodo(@PathVariable Long todoId, @RequestBody @Valid UpdateTodoRequest updateTodoRequest) {
+        checkArgument(todoId.equals(updateTodoRequest.id));
 
-        final Todo todoToUpdate = updateCommandToTodoMapper.apply(updateTodoCommand);
+        final Todo todoToUpdate = updateRequestToTodoMapper.apply(updateTodoRequest);
         final Todo updatedTodo = todoService.updateTodo(todoToUpdate);
         return todoToDTOMapper.apply(updatedTodo);
     }

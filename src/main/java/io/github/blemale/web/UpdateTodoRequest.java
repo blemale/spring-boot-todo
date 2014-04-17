@@ -5,7 +5,10 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CreateTodoCommand {
+public class UpdateTodoRequest {
+
+        @NotNull
+        public final Long id;
 
         @NotNull
         @Size(min = 1, max = 100)
@@ -16,9 +19,11 @@ public class CreateTodoCommand {
         public final String body;
 
         @JsonCreator
-        public CreateTodoCommand(
+        public UpdateTodoRequest(
+                @JsonProperty("id") Long id,
                 @JsonProperty("title") String title,
                 @JsonProperty("body") String body) {
+                this.id = id;
                 this.title = title;
                 this.body = body;
         }
